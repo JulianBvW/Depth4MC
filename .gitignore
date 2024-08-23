@@ -1,3 +1,17 @@
+# Depth4MC specific:
+
+depth4mc/dataset/dataset_maker/minecraft_server/bundler
+depth4mc/dataset/dataset_maker/minecraft_server/logs
+depth4mc/dataset/dataset_maker/minecraft_server/plugins/P*
+depth4mc/dataset/dataset_maker/minecraft_server/plugins/R*
+depth4mc/dataset/dataset_maker/minecraft_server/plugins/r*
+depth4mc/dataset/dataset_maker/minecraft_server/world*
+depth4mc/dataset/dataset_maker/minecraft_server/*.json
+depth4mc/dataset/dataset_maker/minecraft_server/*.yml
+depth4mc/dataset/dataset_maker/minecraft_server/*.txt
+depth4mc/dataset/dataset_maker/minecraft_server/*.jar
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
