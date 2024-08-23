@@ -17,7 +17,11 @@ curl -o $SERVER_DIR/spigot-1.19.4.jar https://download.getbukkit.org/spigot/spig
 
 You can start the server by changing to the `minecraft_server` directory and running this command: ```java -Xmx2G -jar spigot-*.jar nogui```.
 
-**Note**: If you are using WSL and you run Python with it, start the server also on WSL by allowing the Minecraft Port in your WSL firewall and starting the server with an added argument: ```java -Xmx2G -Djava.net.preferIPv4Stack=true -jar spigot-*.jar nogui```.
+> [!NOTE]
+> If you are using WSL and you run Python with it, start the server also on WSL by allowing the Minecraft Port in your WSL firewall and starting the server with an added argument: ```java -Xmx2G -Djava.net.preferIPv4Stack=true -jar spigot-*.jar nogui```.
+
+> [!TIP]
+> Java JDK 17 is the recommended java version for a Minecraft 1.19 server.
 
 The first time you start the server, it will prompt you to accepting the Minecraft EULA. Change the `false` to `true` in the generated `eula.txt` and run the server again.
 
