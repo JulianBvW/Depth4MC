@@ -26,9 +26,19 @@ You can start the server by changing to the `minecraft_server` directory and run
 The first time you start the server, it will prompt you to accepting the Minecraft EULA. Change the `false` to `true` in the generated `eula.txt` and run the server again.
 
 You can now join the server via a 1.19.4 client on the IP `localhost`.
+After joining the server make yourself an operator by typing `op @a` in the console.
 
 To stop the server just type `stop` into the console.
 
 ## Changing the world
 
 To get more diverse images, build some houses on the world or use an existing world. To do that, rename a world (saved inside `.minecraft/saves`) to just `world` and move it inside the `minecraft_server` folder after deleting the old world folder if existant.
+
+## Helpful gamerules
+
+Weather and the day-night-cycle might interrupt your recording. Disable them by typing the following commands into the in-game chat:
+
+```
+/gamerule doWeatherCycle false
+/gamerule doDaylightCycle false
+``` 
