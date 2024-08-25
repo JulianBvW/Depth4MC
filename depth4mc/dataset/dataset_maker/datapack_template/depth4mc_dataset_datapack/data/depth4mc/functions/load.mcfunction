@@ -1,0 +1,2 @@
+scoreboard objectives remove depth4mc_rclick
+scoreboard objectives add depth4mc_rclick minecraft.used:minecraft.carrot_on_a_stick
