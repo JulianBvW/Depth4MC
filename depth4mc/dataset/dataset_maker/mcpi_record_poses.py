@@ -50,7 +50,7 @@ with open(datapack_server_dir + 'data/depth4mc/functions/tick.mcfunction', 'w') 
         tp = f'tp @a[scores={{depth4mc_rclick={i+1}}}] {p.x} {p.y} {p.z} {p.rot} {p.pit}\n'
         f.write(tp)
 
-with open(datapack_server_dir + 'data/depth4mc/functions/load.mcfunction', 'w') as f:
+with open(datapack_server_dir + 'data/depth4mc/functions/load.mcfunction', 'a') as f:
     f.write(f'say Loaded run {cur_time}')
 
 print(f'Poses saved to `{out_dir}`')

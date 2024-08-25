@@ -10,7 +10,7 @@ depth4mc/dataset/dataset_maker/minecraft_server/*.json
 depth4mc/dataset/dataset_maker/minecraft_server/*.yml
 depth4mc/dataset/dataset_maker/minecraft_server/*.txt
 depth4mc/dataset/dataset_maker/minecraft_server/*.jar
-
+depth4mc/dataset/dataset_maker/output/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
