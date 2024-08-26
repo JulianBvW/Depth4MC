@@ -46,7 +46,7 @@ To generate the depth info, we do the same thing as in the prior step, but with 
 
 ### 4. Finishing up
 
-Do the past 3 steps as much as you like on different areas of the world or even different worlds. Then, run `python depth4mc/dataset/dataset_maker/TODO.py` to combine all runs into one dataset that will be saved at `depth4mc/dataset/data`.
+Do the past 3 steps as much as you like on different areas of the world or even different worlds. Then, run `python depth4mc/dataset/dataset_maker/convert_to_dataset.py` to combine all runs into one dataset that will be saved at `depth4mc/dataset/data`.
 
 > [!WARNING]
 > This will delete the old dataset from `depth4mc/dataset/data`!
