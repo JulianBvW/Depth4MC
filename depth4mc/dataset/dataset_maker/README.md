@@ -16,6 +16,8 @@ Create a Minecraft 1.19.4 instance and install the modloader *[Fabric](https://f
 
 For the depth information, a *shaderpack* is used. Download it [here](https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqa0E3ZlVoTWVNMGRIaGhNUFBwbTNfTm1wZm9HZ3xBQ3Jtc0tsSThQcG1iQW5mNEhSeDFfWEJVOW5falgySDNIWDdIQmowMUdXemFaNEFYSUlUMDNyNnZackd1VVdCZVM3TFA1MV9fNVBaNUxDX2NmYVEzOXdvLWV6ZlpRaTVRTllxMU9BQ1lwcG1sblNIZHhOVFRFQQ&q=http%3A%2F%2Fwww.mediafire.com%2Ffile%2F5tan9hrgjhr3vu4%2FCPDepthMap.zip&v=nakyctgYDM8) and copy it into `.minecarft/shaderpacks`. In-game you can select it in the *Video Settings*. YouTube offers tutorials on how install and use *Iris Shaders*.
 
+The depth shader has a resolution of 256 integer values (0 eaning nearest, 255 meaning furthest away). Thus, if your set the clipping (the point from where further distances are just encoded as 255) to a high value, to get the details in the distant blocks, you loose details right in front of you. So, extract the archive of the depth shader and create a copy of the shader folder. Rename one to `CPDepthMapNear` and the other to `CPDepthMapFar`. Delete the archive. In both shader folders, modify the file `shaders/final.fsh` by setting line four to `#define clipping 6` for the near depth shader and `#define clipping 60` for the far one.
+
 > [!NOTE]
 > To get consistent image proportions, change the Minecraft window size to 854x480. On *MultiMC* this can be changed in *Settings -> Minecraft -> Window Size*.
 
@@ -31,6 +33,9 @@ The process consists of three steps: recording the coordinates you want to take 
 
 Run `python depth4mc/dataset/dataset_maker/mcpi_record_poses.py <NUM_IMGS>` in a new console. After five seconds, the script starts recording your in-game pose every 10th of a second resulting in 3000 recorded poses (or whatever specified number). Fly or run around your world visiting normal terrain and buildings to get a diverse set of images. After the duration of the script, it will generate a *datapack* (a modification for the game that enables us to visit the exact coordinates as recorded) and copies it to the server. An output folder will also be generated whith the time of the run.
 
+> [!WARNING]
+> As the datapack uses right-click detection for teleportation, don't look at anything that could be interacted with via a right click like chests, doors, flower pots, levers, ...
+
 ### 2. Taking screenshots
 
 To load the (new) datapack, type `/reload` into the in-game chat. It should now display the time of the correct run in the in-game chat.
@@ -42,7 +47,9 @@ Run the PowerShell (or alternative) script and focus the Minecraft window. This 
 
 ### 3. Taking depth screenshots
 
-To generate the depth info, we do the same thing as in the prior step, but with the depth shader. Click *o* to access the shader selector. Select the depth shader and click *Done*. Run the PowerShell script again and copy the generated screenshots into the *depth_labels* folder from the `mcpi_record_poses.py` script.
+To generate the depth info, we do the same thing as in the prior step, but with the two depth shaders. Click *o* to access the shader selector. Select the depth shader `far` and click *Done*. Run the PowerShell script again and copy the generated screenshots into the `depth_labels_far` folder from the `mcpi_record_poses.py` script.
+
+After that rerun this step whit the other depth shader and copy those results to the `depth_labels_far` folder.
 
 ### 4. Finishing up
 

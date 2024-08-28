@@ -21,7 +21,8 @@ out_dir = dataset_maker_dir + 'output/run_' + cur_time + '/'
 # Preparing Folders
 os.makedirs(out_dir)
 os.makedirs(out_dir + 'screenshots/')
-os.makedirs(out_dir + 'depth_labels/')
+os.makedirs(out_dir + 'depth_labels_near/')
+os.makedirs(out_dir + 'depth_labels_far/')
 shutil.rmtree(datapack_server_dir, ignore_errors=True)
 
 # Warm-Up Phase
