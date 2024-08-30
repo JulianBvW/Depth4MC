@@ -2,8 +2,12 @@
 
 import os
 import math
+import torch
 import shutil
 import numpy as np
+from PIL import Image
+
+SCREENSHOT_DIMS = (480, 854)
 
 output_dir = 'depth4mc/dataset/dataset_maker/output/'
 
@@ -49,7 +53,7 @@ for dir in run_folders:
     screenshots_dir = output_dir + dir + '/screenshots/'
     screenshots = sorted(os.listdir(screenshots_dir))
     for screenshot in screenshots:
-        shutil.copy(screenshots_dir + screenshot, dataset_dir_screenshots + str(i) + '.png')
+        shutil.copy(screenshots_dir + screenshot, dataset_dir_screenshots + f'{i:08}' + '.png')
         i += 1
 
 ### Depth Labels
@@ -62,7 +66,15 @@ for dir in run_folders:
     screenshots_near = sorted(os.listdir(screenshots_dir_near))
     assert len(screenshots_far) == len(screenshots_near)
 
-    for img_far, img_near in zip(screenshots_far, screenshots_near):
-        # TODO
-        shutil.copy(screenshots_dir + screenshot, dataset_dir_labels + str(i) + '.png')
+    depth_vales = torch.zeros(SCREENSHOT_DIMS)
+
+    for img_file_far, img_file_near in zip(screenshots_far, screenshots_near):
+        img_far, img_near = Image.open(screenshots_dir_far+img_file_far), Image.open(screenshots_dir_near+img_file_near)
+        vals_far, vals_near = np.array(img_far)[:, :, 0], np.array(img_near)[:, :, 0]
+        
+        for row in range(depth_vales.shape[0]):
+            for col in range(depth_vales.shape[1]):
+                depth_vales[row, col] = to_depth(vals_far[row, col], vals_near[row, col])
+        
+        torch.save(depth_vales, f'{dataset_dir_labels}{i:08}.pt')
         i += 1
