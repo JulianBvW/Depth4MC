@@ -2,9 +2,9 @@
 
 import os
 import math
-import torch
 import shutil
 import numpy as np
+from tqdm import tqdm
 from PIL import Image
 
 SCREENSHOT_DIMS = (480, 854)
@@ -48,8 +48,10 @@ run_folders = sorted(os.listdir(output_dir))
 
 ### Screenshots
 
+print('### Converting Screenshots')
+
 i = 0
-for dir in run_folders:
+for dir in tqdm(run_folders):
     screenshots_dir = output_dir + dir + '/screenshots/'
     screenshots = sorted(os.listdir(screenshots_dir))
     for screenshot in screenshots:
@@ -57,6 +59,8 @@ for dir in run_folders:
         i += 1
 
 ### Depth Labels
+
+print('### Converting Depth Labels')
 
 i = 0
 for dir in run_folders:
@@ -66,9 +70,9 @@ for dir in run_folders:
     screenshots_near = sorted(os.listdir(screenshots_dir_near))
     assert len(screenshots_far) == len(screenshots_near)
 
-    depth_vales = torch.zeros(SCREENSHOT_DIMS)
+    depth_vales = np.zeros(SCREENSHOT_DIMS, dtype=np.float16)
 
-    for img_file_far, img_file_near in zip(screenshots_far, screenshots_near):
+    for img_file_far, img_file_near in tqdm(list(zip(screenshots_far, screenshots_near))):
         img_far, img_near = Image.open(screenshots_dir_far+img_file_far), Image.open(screenshots_dir_near+img_file_near)
         vals_far, vals_near = np.array(img_far)[:, :, 0], np.array(img_near)[:, :, 0]
         
@@ -76,5 +80,6 @@ for dir in run_folders:
             for col in range(depth_vales.shape[1]):
                 depth_vales[row, col] = to_depth(vals_far[row, col], vals_near[row, col])
         
-        torch.save(depth_vales, f'{dataset_dir_labels}{i:08}.pt')
+        with open(f'{dataset_dir_labels}{i:08}.npy', 'wb') as f:
+            np.save(f, depth_vales)
         i += 1

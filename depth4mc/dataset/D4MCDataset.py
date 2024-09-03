@@ -3,7 +3,6 @@ from torchvision import transforms
 from PIL import Image
 import pandas as pd
 import numpy as np
-import torch
 import os
 
 CAMERA_SIZE = (854, 480)
@@ -30,6 +29,6 @@ class D4MCDataset(Dataset):
         screenshot = self.transform(screenshot)
 
         # Depth Label
-        label = torch.load(self.dataset_path + self.labels[idx])
+        label = np.load(self.dataset_path + self.labels[idx])
 
         return screenshot, label
