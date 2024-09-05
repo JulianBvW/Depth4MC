@@ -14,9 +14,12 @@ DEFAULT_TRANSFORM = transforms.Compose([
 
 class D4MCDataset(Dataset):
     def __init__(self, dataset_path='depth4mc/dataset/data/', transform=DEFAULT_TRANSFORM):
-        self.dataset_path = dataset_path
-        self.screenshots = sorted(os.listdir(dataset_path + 'screenshots/'))
-        self.labels = sorted(os.listdir(dataset_path + 'depth_labels/'))
+        self.screenshots_path = dataset_path + 'screenshots/'
+        self.labels_path = dataset_path + 'depth_labels/'
+
+        self.screenshots = sorted(os.listdir(self.screenshots_path))
+        self.labels = sorted(os.listdir(self.labels_path))
+
         self.transform = transform
     
     def __len__(self):
@@ -25,10 +28,10 @@ class D4MCDataset(Dataset):
     def __getitem__(self, idx):
 
         # Screenshot
-        screenshot = Image.open(self.dataset_path + self.screenshots[idx]).convert('RGB')
+        screenshot = Image.open(self.screenshots_path + self.screenshots[idx]).convert('RGB')
         screenshot = self.transform(screenshot)
 
         # Depth Label
-        label = np.load(self.dataset_path + self.labels[idx])
+        label = np.load(self.labels_path + self.labels[idx])
 
         return screenshot, label
