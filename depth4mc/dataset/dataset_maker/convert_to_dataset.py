@@ -15,11 +15,6 @@ dataset_dir = 'depth4mc/dataset/data/'
 dataset_dir_screenshots = dataset_dir + 'screenshots/'
 dataset_dir_labels = dataset_dir + 'depth_labels/'
 
-shutil.rmtree(dataset_dir, ignore_errors=True)
-os.makedirs(dataset_dir)
-os.makedirs(dataset_dir_screenshots)
-os.makedirs(dataset_dir_labels)
-
 # Depth conversion functions
 
 def abc_formula(a, b, c):
@@ -42,44 +37,56 @@ def to_depth(color_in_far_img, color_in_near_img):
         return to_depth_near(color_in_near_img)
     return to_depth_far(color_in_far_img)
 
-# Get all runs
+def main():
 
-run_folders = sorted(os.listdir(output_dir))
+    # Create and delete folders
 
-### Screenshots
+    shutil.rmtree(dataset_dir, ignore_errors=True)
+    os.makedirs(dataset_dir)
+    os.makedirs(dataset_dir_screenshots)
+    os.makedirs(dataset_dir_labels)
 
-print('### Converting Screenshots')
+    # Get all runs
 
-i = 0
-for dir in tqdm(run_folders):
-    screenshots_dir = output_dir + dir + '/screenshots/'
-    screenshots = sorted(os.listdir(screenshots_dir))
-    for screenshot in screenshots:
-        shutil.copy(screenshots_dir + screenshot, dataset_dir_screenshots + f'{i:08}' + '.png')
-        i += 1
+    run_folders = sorted(os.listdir(output_dir))
 
-### Depth Labels
+    ### Screenshots
 
-print('### Converting Depth Labels')
+    print('### Converting Screenshots')
 
-i = 0
-for dir in run_folders:
-    screenshots_dir_far  = output_dir + dir + '/depth_labels_far/'
-    screenshots_dir_near = output_dir + dir + '/depth_labels_near/'
-    screenshots_far  = sorted(os.listdir(screenshots_dir_far))
-    screenshots_near = sorted(os.listdir(screenshots_dir_near))
-    assert len(screenshots_far) == len(screenshots_near)
+    i = 0
+    for dir in tqdm(run_folders):
+        screenshots_dir = output_dir + dir + '/screenshots/'
+        screenshots = sorted(os.listdir(screenshots_dir))
+        for screenshot in screenshots:
+            shutil.copy(screenshots_dir + screenshot, dataset_dir_screenshots + f'{i:08}' + '.png')
+            i += 1
 
-    depth_vales = np.zeros(SCREENSHOT_DIMS, dtype=np.float16)
+    ### Depth Labels
 
-    for img_file_far, img_file_near in tqdm(list(zip(screenshots_far, screenshots_near))):
-        img_far, img_near = Image.open(screenshots_dir_far+img_file_far), Image.open(screenshots_dir_near+img_file_near)
-        vals_far, vals_near = np.array(img_far)[:, :, 0], np.array(img_near)[:, :, 0]
-        
-        for row in range(depth_vales.shape[0]):
-            for col in range(depth_vales.shape[1]):
-                depth_vales[row, col] = to_depth(vals_far[row, col], vals_near[row, col])
-        
-        with open(f'{dataset_dir_labels}{i:08}.npy', 'wb') as f:
-            np.save(f, depth_vales)
-        i += 1
+    print('### Converting Depth Labels')
+
+    i = 0
+    for dir in run_folders:
+        screenshots_dir_far  = output_dir + dir + '/depth_labels_far/'
+        screenshots_dir_near = output_dir + dir + '/depth_labels_near/'
+        screenshots_far  = sorted(os.listdir(screenshots_dir_far))
+        screenshots_near = sorted(os.listdir(screenshots_dir_near))
+        assert len(screenshots_far) == len(screenshots_near)
+
+        depth_vales = np.zeros(SCREENSHOT_DIMS, dtype=np.float16)
+
+        for img_file_far, img_file_near in tqdm(list(zip(screenshots_far, screenshots_near))):
+            img_far, img_near = Image.open(screenshots_dir_far+img_file_far), Image.open(screenshots_dir_near+img_file_near)
+            vals_far, vals_near = np.array(img_far)[:, :, 0], np.array(img_near)[:, :, 0]
+            
+            for row in range(depth_vales.shape[0]):
+                for col in range(depth_vales.shape[1]):
+                    depth_vales[row, col] = to_depth(vals_far[row, col], vals_near[row, col])
+            
+            with open(f'{dataset_dir_labels}{i:08}.npy', 'wb') as f:
+                np.save(f, depth_vales)
+            i += 1
+
+if __name__ == '__main__':
+    main()
