@@ -2,6 +2,10 @@ import torch
 from tqdm import tqdm
 
 
+def capped_mse_loss(pred, target, cap=100):
+    mask = target <= cap  # Only compute loss for depths smaller than {cap} meters
+    return torch.mean((pred[mask] - target[mask]) ** 2)
+
 def train_step(model, train_loader, criterion, optimizer, device):
     model.train()
     train_loss = 0.0
