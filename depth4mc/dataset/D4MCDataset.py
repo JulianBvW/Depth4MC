@@ -7,7 +7,7 @@ import os
 
 CAMERA_SIZE = (854, 480)
 DEFAULT_TRANSFORM = transforms.Compose([
-    transforms.Resize(CAMERA_SIZE),
+    #transforms.Resize(CAMERA_SIZE),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.3955, 0.3832, 0.3661], std=[0.1625, 0.1902, 0.2550])  # TODO recalculate
 ])
