@@ -11,7 +11,7 @@ def train_step(model, train_loader, criterion, optimizer, device):
     train_loss = 0.0
 
     for screenshots, labels in tqdm(train_loader):
-        screenshots, labels = screenshots.to(device), labels.to(device)
+        screenshots, labels = screenshots.to(device), labels.to(device).float()
 
         optimizer.zero_grad()
         outputs = model(screenshots)
