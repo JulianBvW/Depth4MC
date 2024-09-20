@@ -39,6 +39,6 @@ class D4MCDataset(Dataset):
         # Flip for data augmentation
         if idx >= self.num_data:
             screenshot = transforms.functional.hflip(screenshot)
-            label = np.fliplr(label)
+            label = np.fliplr(label).copy()
 
         return screenshot, label
