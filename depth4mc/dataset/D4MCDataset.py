@@ -19,19 +19,26 @@ class D4MCDataset(Dataset):
 
         self.screenshots = sorted(os.listdir(self.screenshots_path))
         self.labels = sorted(os.listdir(self.labels_path))
-
+        
+        self.num_data = len(self.screenshots)
         self.transform = transform
-    
+
     def __len__(self):
-        return len(self.screenshots)
+        return self.num_data * 2
 
     def __getitem__(self, idx):
+        data_point = idx % self.num_data
 
         # Screenshot
-        screenshot = Image.open(self.screenshots_path + self.screenshots[idx]).convert('RGB')
+        screenshot = Image.open(self.screenshots_path + self.screenshots[data_point]).convert('RGB')
         screenshot = self.transform(screenshot)
 
         # Depth Label
-        label = np.load(self.labels_path + self.labels[idx])
+        label = np.load(self.labels_path + self.labels[data_point])
+
+        # Flip for data augmentation
+        if idx >= self.num_data:
+            screenshot = transforms.functional.hflip(screenshot)
+            label = np.fliplr(label)
 
         return screenshot, label
