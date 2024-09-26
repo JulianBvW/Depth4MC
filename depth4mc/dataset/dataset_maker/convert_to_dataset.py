@@ -39,6 +39,8 @@ def to_depth(color_in_far_img, color_in_near_img):
 
 def main():
 
+    errors = []
+
     # Create and delete folders
 
     shutil.rmtree(dataset_dir, ignore_errors=True)
@@ -59,7 +61,11 @@ def main():
         screenshots_dir = output_dir + dir + '/screenshots/'
         screenshots = sorted(os.listdir(screenshots_dir))
         for screenshot in screenshots:
-            shutil.copy(screenshots_dir + screenshot, dataset_dir_screenshots + f'{i:08}' + '.png')
+            try:
+                Image.open(screenshots_dir + screenshot)
+                shutil.copy(screenshots_dir + screenshot, dataset_dir_screenshots + f'{i:08}' + '.png')
+            except:
+                errors.append(f'[Screenshots] Error at {screenshots_dir + screenshot}, tried saving as {i:08}.png')
             i += 1
 
     ### Depth Labels
@@ -77,15 +83,18 @@ def main():
         depth_vales = np.zeros(SCREENSHOT_DIMS, dtype=np.float16)
 
         for img_file_far, img_file_near in tqdm(list(zip(screenshots_far, screenshots_near))):
-            img_far, img_near = Image.open(screenshots_dir_far+img_file_far), Image.open(screenshots_dir_near+img_file_near)
-            vals_far, vals_near = np.array(img_far)[:, :, 0], np.array(img_near)[:, :, 0]
-            
-            for row in range(depth_vales.shape[0]):
-                for col in range(depth_vales.shape[1]):
-                    depth_vales[row, col] = to_depth(vals_far[row, col], vals_near[row, col])
-            
-            with open(f'{dataset_dir_labels}{i:08}.npy', 'wb') as f:
-                np.save(f, depth_vales)
+            try:
+                img_far, img_near = Image.open(screenshots_dir_far+img_file_far), Image.open(screenshots_dir_near+img_file_near)
+                vals_far, vals_near = np.array(img_far)[:, :, 0], np.array(img_near)[:, :, 0]
+                
+                for row in range(depth_vales.shape[0]):
+                    for col in range(depth_vales.shape[1]):
+                        depth_vales[row, col] = to_depth(vals_far[row, col], vals_near[row, col])
+                
+                with open(f'{dataset_dir_labels}{i:08}.npy', 'wb') as f:
+                    np.save(f, depth_vales)
+            except:
+                errors.append(f'[Depth] Error at {screenshots_dir_far+img_file_far} or {screenshots_dir_near+img_file_near}, tried saving as {i:08}.npy')
             i += 1
 
 if __name__ == '__main__':
