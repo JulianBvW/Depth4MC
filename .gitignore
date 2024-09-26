@@ -13,6 +13,8 @@ depth4mc/dataset/dataset_maker/minecraft_server/*.jar
 depth4mc/dataset/dataset_maker/output/*
 depth4mc/dataset/data/*
 
+*.pth
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
