@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, random_split
 
+import os
 import pandas as pd
 from datetime import datetime
 from argparse import ArgumentParser
@@ -17,12 +18,21 @@ parser.add_argument('--lr', help='learning rate', default=0.001, type=float)
 parser.add_argument('--cpu', help='train on CPU only', action='store_true')
 args = parser.parse_args()
 
+### Dirs
+
+RESULTS_DIR = 'depth4mc/training/results/'
+os.makedirs(RESULTS_DIR, exist_ok=True)
+os.makedirs(RESULTS_DIR + 'checkpoints/', exist_ok=True)
+
+### Device
+
 DEVICE = torch.device('cuda') if torch.cuda.is_available() and not args.cpu else torch.device('cpu')
-print(DEVICE)
+print('Selected Device:', DEVICE)
 
 ### Load Dataset
 
 full_dataset = D4MCDataset()
+print('Loaded', len(full_dataset), 'Datapoints')
 train_dataset, test_dataset = random_split(full_dataset, [0.8, 0.2])
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=4)
@@ -52,6 +62,8 @@ for epoch in range(args.epochs):
     test_losses.append(test_loss)
 
     print(f'Epoch {epoch+1}/{args.epochs} finished | Train Loss: {train_loss:.4f} | Test Loss: {test_loss:.4f}')
+    if epoch % 10 == 0:
+        torch.save(model.state_dict(), RESULTS_DIR + f'checkpoints/model_e{epoch:04}.pth')
 
 print('Finished training after:', datetime.now() - start_time)
 
@@ -60,4 +72,6 @@ df = pd.DataFrame({
     'Train Loss': train_losses,
     'Test Loss': test_losses
 })
-df.to_csv(f'depth4mc/training/losses.csv', index=False)
+df.to_csv(RESULTS_DIR + 'losses.csv', index=False)
+torch.save(model.state_dict(), RESULTS_DIR + 'checkpoints/model_final.pth')
+
