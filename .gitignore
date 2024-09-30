@@ -15,6 +15,9 @@ depth4mc/dataset/data/*
 
 *.pth
 
+depth4mc/comparing/depth_anything
+depth4mc/comparing/torchhub
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
