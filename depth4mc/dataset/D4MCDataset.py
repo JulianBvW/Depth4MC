@@ -3,6 +3,8 @@ from torchvision import transforms
 from PIL import Image
 import pandas as pd
 import numpy as np
+import torch
+import cv2
 import os
 
 CAMERA_SIZE = (854, 480)
@@ -31,7 +33,13 @@ class D4MCDataset(Dataset):
 
         # Screenshot
         screenshot = Image.open(self.screenshots_path + self.screenshots[data_point]).convert('RGB')
+        # print('vor transform')
         screenshot = self.transform(screenshot)
+        # print('nach transform')
+
+        # For DepthAnything
+        # screenshot = cv2.cvtColor(cv2.imread(self.screenshots_path + self.screenshots[data_point]), cv2.COLOR_BGR2RGB) / 255.0
+        # screenshot = torch.from_numpy(self.transform({'image': screenshot})['image'])
 
         # Depth Label
         label = np.load(self.labels_path + self.labels[data_point])
