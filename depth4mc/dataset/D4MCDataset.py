@@ -16,8 +16,8 @@ DEFAULT_TRANSFORM = transforms.Compose([
 
 class D4MCDataset(Dataset):
     def __init__(self, dataset_path='depth4mc/dataset/data/', transform=DEFAULT_TRANSFORM, augment=True):
-        self.screenshots_path = dataset_path + 'screenshots/'
-        self.labels_path = dataset_path + 'depth_labels/'
+        self.screenshots_path = dataset_path + '/screenshots/'
+        self.labels_path = dataset_path + '/depth_labels/'
 
         self.screenshots = sorted(os.listdir(self.screenshots_path))
         self.labels = sorted(os.listdir(self.labels_path))
@@ -34,9 +34,7 @@ class D4MCDataset(Dataset):
 
         # Screenshot
         screenshot = Image.open(self.screenshots_path + self.screenshots[data_point]).convert('RGB')
-        # print('vor transform')
         screenshot = self.transform(screenshot)
-        # print('nach transform')
 
         # For DepthAnything
         # screenshot = cv2.cvtColor(cv2.imread(self.screenshots_path + self.screenshots[data_point]), cv2.COLOR_BGR2RGB) / 255.0
