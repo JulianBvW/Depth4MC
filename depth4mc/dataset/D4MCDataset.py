@@ -15,7 +15,7 @@ DEFAULT_TRANSFORM = transforms.Compose([
 ])
 
 class D4MCDataset(Dataset):
-    def __init__(self, dataset_path='depth4mc/dataset/data/', transform=DEFAULT_TRANSFORM):
+    def __init__(self, dataset_path='depth4mc/dataset/data/', transform=DEFAULT_TRANSFORM, augment=True):
         self.screenshots_path = dataset_path + 'screenshots/'
         self.labels_path = dataset_path + 'depth_labels/'
 
@@ -23,10 +23,11 @@ class D4MCDataset(Dataset):
         self.labels = sorted(os.listdir(self.labels_path))
         
         self.num_data = len(self.screenshots)
+        self.length = self.num_data * (2 if augment else 1)
         self.transform = transform
 
     def __len__(self):
-        return self.num_data * 2
+        return self.length
 
     def __getitem__(self, idx):
         data_point = idx % self.num_data
