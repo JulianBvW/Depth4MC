@@ -1,6 +1,8 @@
 # Depth4MC
 Depth estimator machine learning model for the sandbox game Minecraft
 
+![example](https://github.com/user-attachments/assets/112709f0-8318-4c12-bffb-6602e41f19e3)
+
 ## Installation
 
 The model itself only needs PyTorch and Numpy as it is a U-Net modelled from scratch.
